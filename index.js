@@ -27,11 +27,14 @@ function processFirstItem(stringList, callback) {
  * Study the code for counter1 and counter2. Answer the questions below.
  * 
  * 1. What is the difference between counter1 and counter2?
+ *    counter1() iterates its own private variable that cannot be accessed from any other scope, but counter2() iterates a variable in the outer scope.
  * 
  * 2. Which of the two uses a closure? How can you tell?
+ *    counter1 uses a closure. The variable that it creates is contained in its scope.
  * 
  * 3. In what scenario would the counter1 code be preferable? In what scenario would counter2 be better? 
- *
+ *    counter1 would be prefereable if you need a counter that does nothing else but iterate by one. counter2 would be prefereable if you need the count variable to be accessible by other functions to perform other operations on it.
+ * 
 */
 
 // counter1 code
@@ -56,11 +59,12 @@ function counter2() {
 
 Write a function called `inning` that returns a random number of points that a team scored in an inning. This should be a whole number between 0 and 2. */
 
-function inning(/*Code Here*/){
+function inning(){
+  return ((Math.random() * 10).toFixed(0) % 3);
+};
 
-    /*Code Here*/
-
-}
+console.log(`Task 2: inning()\n${inning()}, ${inning()}, ${inning()}`);
+console.log('\n');
 
 /* Task 3: finalScore()
 
@@ -76,11 +80,25 @@ finalScore(inning, 9) might return:
 
 */ 
 
-function finalScore(/*code Here*/){
+function finalScore(scoreFunction, numOfInnings){
+  let homeScore = 0, awayScore = 0;
+  for (let i = 0; i < numOfInnings; i++) {
+    homeScore += scoreFunction();
+    awayScore += scoreFunction();
+  };
+  return {
+    Home: homeScore,
+    Away: awayScore
+  };
+};
 
-  /*Code Here*/
-
+console.log(`Task 3: finalScore()\n{`);
+let obj = finalScore(inning, 9);
+for (let key of Object.keys(finalScore(inning, 9))) {
+  console.log(`\t${key}: ${obj[key]}\n`)
 }
+console.log('}');
+console.log('\n');
 
 /* Task 4: 
 
@@ -103,8 +121,31 @@ and returns the score at each pont in the game, like so:
 Final Score: awayTeam - homeTeam */
 
 
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
-}
+function scoreboard(scoreFunction, numOfInnings) {
+  let homeScore = 0, awayScore = 0, returnString = '';
+  for (let i = 0; i < numOfInnings; i++) {
+    let ordinalSuffix;
+    var inning = i + 1;
+    switch (inning){
+      case 1: 
+        ordinalSuffix = 'st';
+        break;
+      case 2:
+        ordinalSuffix = 'nd';
+        break;
+      case 3:
+        ordinalSuffix = 'rd';
+        break;
+      default:
+        ordinalSuffix = 'th';
+    };
+    inning += ordinalSuffix;
+    homeScore += scoreFunction();
+    awayScore += scoreFunction();
+    returnString += `${inning} inning: ${homeScore} - ${awayScore}\n`;
+  }
+  return returnString += `\nFinal Score: ${homeScore} - ${awayScore}`;
+};
 
-
+console.log(`Task 4: scoreboard()\n${scoreboard(inning, 9)}`);
+console.log('\n');
