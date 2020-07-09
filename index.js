@@ -121,7 +121,7 @@ and returns the score at each pont in the game, like so:
 Final Score: awayTeam - homeTeam */
 
 
-function scoreboard(scoreFunction, numOfInnings) {
+function scoreboard(getScores, scoreFunction, numOfInnings) {
   let homeScore = 0, awayScore = 0, returnString = '';
   for (let i = 0; i < numOfInnings; i++) {
     let ordinalSuffix;
@@ -140,12 +140,17 @@ function scoreboard(scoreFunction, numOfInnings) {
         ordinalSuffix = 'th';
     };
     inning += ordinalSuffix;
-    homeScore += scoreFunction();
-    awayScore += scoreFunction();
+    let score = getScores(scoreFunction);
+    homeScore += score[0];
+    awayScore += score[1];
     returnString += `${inning} inning: ${homeScore} - ${awayScore}\n`;
   }
   return returnString += `\nFinal Score: ${homeScore} - ${awayScore}`;
 };
 
-console.log(`Task 4: scoreboard()\n${scoreboard(inning, 9)}`);
+function getInningScore(scoreFunction) {
+  return [scoreFunction(), scoreFunction()];
+};
+
+console.log(`Task 4: scoreboard()\n${scoreboard(getInningScore, inning, 9)}`);
 console.log('\n');
